@@ -1,0 +1,29 @@
+name: Build Windows
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        run: rustup show
+
+      - name: Build release binary
+        run: cargo build --locked --release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: local-mcp-windows
+          path: |
+            target/release/local-mcp.exe
+          if-no-files-found: error
